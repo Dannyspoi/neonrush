@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#160b35">
+<meta name="description" content="NEON RUSH — one tap, perfect timing. Beat the five-round arcade challenge and share your score.">
+<title>NEON RUSH — Arcade Challenge</title>
+<style>
+:root{color-scheme:dark;--bg:#100824;--panel:#1b1034;--line:#39245b;--muted:#b9a9d4;--white:#fff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -15%,#51218b 0%,#1a0d35 43%,#0b0717 100%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;display:flex;justify-content:center;padding:24px 14px}
+main{width:min(100%,560px);display:flex;flex-direction:column;gap:17px}
+.hero{position:relative;overflow:hidden;text-align:center;padding:28px 18px 25px;border:1px solid #a64cff77;border-radius:25px;background:linear-gradient(130deg,#5715d9,#e5229b 53%,#ff8b32);box-shadow:0 15px 55px #a02bdf35}
+.hero:after{content:"";position:absolute;width:210px;height:210px;border:1px solid #ffffff50;border-radius:50%;right:-90px;top:-120px;box-shadow:0 0 0 22px #ffffff0b,0 0 0 45px #ffffff0b}
+.kicker{font-size:11px;font-weight:900;letter-spacing:3px;opacity:.9}
+.logo{font-size:clamp(42px,11vw,66px);font-weight:1000;letter-spacing:-4px;line-height:1.1;text-shadow:0 4px 18px #0005;margin:12px 0 5px}
+.tagline{font-size:12px;letter-spacing:4px;font-weight:900}
+.pills{display:flex;justify-content:center;gap:8px;margin-top:18px;flex-wrap:wrap}
+.pill{border-radius:30px;background:#ffffff26;padding:7px 12px;font-size:11px;font-weight:900}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:#1b1034d9;border:1px solid var(--line);border-radius:15px;padding:12px 5px;text-align:center}
+.stat small{display:block;font-size:10px;letter-spacing:1.5px;color:var(--muted);font-weight:900}
+.stat strong{display:block;font-size:26px;font-weight:1000;margin-top:2px}
+.progressrow{display:flex;justify-content:space-between;font-size:11px;font-weight:900;letter-spacing:1.5px;color:#d5c5ed}
+.meter{height:7px;background:#ffffff20;border-radius:20px;overflow:hidden;margin-top:-9px}
+.meter>div{height:100%;width:0;background:linear-gradient(90deg,#a438ff,#ff37c7,#45ffc0);transition:width .25s}
+.arena{height:160px;position:relative;overflow:hidden;border-radius:20px;background:linear-gradient(120deg,#140c35,#25104d 55%,#101b3c);border:1px solid #914eff;box-shadow:inset 0 0 35px #7a30e544;touch-action:manipulation;cursor:pointer}
+.arena:before{content:"";position:absolute;inset:0;background-image:radial-gradient(#ffffff50 1px,transparent 1px);background-size:19px 19px;opacity:.35}
+.arena-label{position:absolute;top:14px;left:0;right:0;text-align:center;color:#d8c4ff;font-size:10px;letter-spacing:3px;font-weight:900}
+.lane{position:absolute;left:5%;right:5%;height:7px;top:77px;background:#ffffff20;border-radius:20px}
+.target{position:absolute;left:48%;width:4%;top:48px;height:62px;border:2px solid #48ffba;border-radius:8px;background:#16ff9a35;box-shadow:0 0 17px #00ffa0,0 0 35px #00ffa077}
+.marker{position:absolute;left:5%;top:39px;width:13px;height:80px;border-radius:10px;background:#fff;box-shadow:0 0 9px white,0 0 23px #ff37da,0 0 35px #ff37da;transform:translateX(-50%)}
+.arena.live .target{animation:pulse .7s infinite}
+.arena.perfect{box-shadow:inset 0 0 55px #00ffa077,0 0 22px #00ffa0}
+@keyframes pulse{50%{filter:brightness(1.7)}}
+.directions{display:flex;justify-content:space-between;font-size:10px;font-weight:900;letter-spacing:1px;color:#a995c5}
+.result{text-align:center;font-size:clamp(34px,9vw,48px);font-weight:1000;letter-spacing:-2px;line-height:1.2;background:linear-gradient(90deg,#ff54d9,#9d74ff,#42e9c0);background-clip:text;-webkit-background-clip:text;color:transparent;min-height:58px;display:grid;place-items:center}
+.feed{text-align:center;color:#c6b6df;font-size:13px;min-height:20px}
+button{width:100%;border:0;border-radius:14px;padding:16px 14px;font:900 16px system-ui;cursor:pointer;transition:transform .12s,filter .12s}
+button:active{transform:scale(.98)}
+button:focus-visible,.arena:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.primary{color:#fff;background:linear-gradient(100deg,#9c37ff,#ed2eae,#ff8b38);box-shadow:0 6px 25px #b12eea55}
+.secondary{color:#fff;background:#1b1034;border:1px solid #563b7b}
+.how{background:#1b1034a8;border:1px solid var(--line);border-radius:15px;padding:15px;color:#c6b6df;font-size:12px;line-height:1.6}
+.how strong{color:white;letter-spacing:1.5px}
+footer{text-align:center;font-size:10px;letter-spacing:2px;color:#806d9e;padding:4px}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+ <header class="hero">
+  <div class="kicker">✦ ARCADE MODE · NO MERCY ✦</div>
+  <h1 class="logo">NEON RUSH</h1>
+  <div class="tagline">ONE TAP. PERFECT TIMING.</div>
+  <div class="pills"><span class="pill">🔥 COMBO CHALLENGE</span><span class="pill">🏆 500 PTS</span></div>
+ </header>
+ <section class="stats" aria-label="Game statistics">
+  <div class="stat"><small>SCORE</small><strong id="score">0</strong></div>
+  <div class="stat"><small>PERSONAL BEST</small><strong id="best">0</strong></div>
+  <div class="stat"><small>COMBO</small><strong id="combo">0 🔥</strong></div>
+ </section>
+ <div class="progressrow"><span id="round">ROUND 0 / 5</span><span id="level">LEVEL 1</span></div>
+ <div class="meter" aria-label="Round progress"><div id="progress"></div></div>
+ <section class="arena" id="arena" role="button" tabindex="0" aria-label="Tap or press Space to stop the marker">
+  <div class="arena-label">STOP IN THE GLOW ZONE</div><div class="lane"></div><div class="target"></div><div class="marker" id="marker"></div>
+ </section>
+ <div class="directions"><span>← TOO EARLY</span><span>PERFECT</span><span>TOO LATE →</span></div>
+ <div class="result" id="result" aria-live="polite">READY?</div>
+ <div class="feed" id="feed" aria-live="polite">Can you hit 500 points?</div>
+ <button class="primary" id="action">⚡ START THE RUSH</button>
+ <button class="secondary" id="share" hidden>↗ CHALLENGE YOUR FRIENDS</button>
+ <section class="how"><strong>🎮 HOW TO PLAY</strong><br>Tap the moving marker or press <b>Space</b> when it reaches the glowing green zone. Five rounds. The marker gets faster every round. Build your combo and chase the perfect 500.</section>
+ <footer>NEON RUSH · CAN YOU BEAT THE SCORE?</footer>
+</main>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+let score=0,best=0,round=0,combo=0,playing=false,finished=false,pos=5,dir=1,speed=.65,raf=0,last=0,results=[];
+try{best=Number(localStorage.getItem('neon-rush-best')||0)}catch(e){}
+$('best').textContent=best;
+function update(){
+ $('score').textContent=score;$('combo').textContent=combo+' 🔥';
+ $('round').textContent='ROUND '+round+' / 5';$('level').textContent='LEVEL '+Math.max(1,round);
+ $('progress').style.width=(round/5*100)+'%';
+}
+function move(t){
+ if(!playing)return;const dt=Math.min(t-last,40);last=t;
+ pos+=dir*speed*dt/10;
+ if(pos>=95){pos=95;dir=-1}if(pos<=5){pos=5;dir=1}
+ $('marker').style.left=pos+'%';raf=requestAnimationFrame(move);
+}
+function next(){
+ round++;speed=.65+(round-1)*.4;pos=5;dir=1;playing=true;
+ $('arena').classList.add('live');$('arena').classList.remove('perfect');
+ $('marker').style.left='5%';last=performance.now();update();
+ $('result').textContent='🎯';$('feed').textContent=round===1?'Find the green zone!':'Round '+round+' — faster now!';
+ raf=requestAnimationFrame(move);
+}
+function start(){
+ cancelAnimationFrame(raf);score=0;round=0;combo=0;results=[];finished=false;
+ $('share').hidden=true;$('result').textContent='LET’S GO!';$('feed').textContent='Focus. Find the zone. Tap!';
+ $('action').textContent='STOP THE MARKER';next();
+}
+function stop(){
+ if(!playing)return;cancelAnimationFrame(raf);playing=false;$('arena').classList.remove('live');
+ const distance=Math.abs(pos-50);let pts=Math.max(0,100-Math.round(distance*2.5));
+ if(pts>=80)combo++;else combo=0;
+ const bonus=Math.min(20,Math.max(0,combo-1)*5);pts=Math.min(100,pts+bonus);
+ score+=pts;results.push(pts);update();
+ $('result').textContent=pts===100?'PERFECT! ✨':pts>=80?'AMAZING! 🔥':pts>=50?'SO CLOSE!':'MISS!';
+ $('feed').textContent=pts+' points'+(bonus?' + '+bonus+' combo bonus':'')+' · '+combo+' streak';
+ $('arena').classList.toggle('perfect',pts===100);
+ $('action').textContent=round===5?'🏆 REVEAL MY SCORE':'NEXT ROUND →';
+}
+function finish(){
+ finished=true;$('arena').classList.remove('live');
+ best=Math.max(best,score);try{localStorage.setItem('neon-rush-best',best)}catch(e){}
+ $('best').textContent=best;
+ $('result').textContent=score===500?'LEGENDARY! 🏆':score>=400?'UNSTOPPABLE! 🔥':score>=300?'BEAST MODE! ⚡':score>=150?'NICE RUN! ✨':'KEEP RUSHING!';
+ $('feed').textContent='You scored '+score+'/500 · '+results.filter(x=>x===100).length+' perfect rounds';
+ $('action').textContent='↻ PLAY AGAIN';$('share').hidden=false;
+}
+$('action').addEventListener('click',()=>{
+ if(finished){start();return}
+ if(round===0){start();return}
+ if(playing){stop();return}
+ if(round===5){finish();return}
+ next();
+});
+function tapArena(){if(playing)stop()}
+$('arena').addEventListener('click',tapArena);
+$('arena').addEventListener('keydown',e=>{if((e.code==='Space'||e.code==='Enter')&&playing){e.preventDefault();stop()}});
+document.addEventListener('keydown',e=>{if(e.code==='Space'&&playing&&e.target.tagName!=='BUTTON'){e.preventDefault();stop()}});
+$('share').addEventListener('click',async()=>{
+ const text='⚡ I scored '+score+'/500 on NEON RUSH! 🔥 Can you beat me? '+location.href;
+ try{
+  if(navigator.share)await navigator.share({title:'NEON RUSH',text});
+  else if(navigator.clipboard){await navigator.clipboard.writeText(text);$('share').textContent='✓ CHALLENGE COPIED!'}
+  else prompt('Copy your challenge:',text);
+ }catch(e){}
+});
+update();
+})();
+</script>
+</body>
+</html>
